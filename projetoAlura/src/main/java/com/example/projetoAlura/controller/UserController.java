@@ -1,36 +1,29 @@
 package com.example.projetoAlura.controller;
 
 import com.example.projetoAlura.model.User;
-import com.example.projetoAlura.service.UserService;
+import com.example.projetoAlura.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 class UserController {
 
-    private final UserService userService;
-
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserRepository userRepository;
+
+    @GetMapping
+    public List<User> toAdd() {
+        return userRepository.findAll();
     }
 
-    @GetMapping("/{username}")
-    private ResponseEntity<UserInfo> getUserInfo(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        UserInfo userInfo = new UserInfo(user.getName(), user.getEmail(), user.getRoles());
-        return ResponseEntity.ok(userInfo);
-    }
-
-    private record UserInfo(String name, String email, com.example.projetoAlura.model.Roles role) {
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public User toAdd(@RequestBody User user) {
+        return userRepository.save(user);
     }
 }
