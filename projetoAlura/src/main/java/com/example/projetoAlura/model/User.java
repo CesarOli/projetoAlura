@@ -1,62 +1,31 @@
 package com.example.projetoAlura.model;
 
-import java.util.ArrayList;
+import jakarta.persistence.*;
+
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 @Entity
-@Table(name="users")
+@Table(name = "User")
 public class User {
-
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "username", unique = true)
     private String username;
+
+    private String name;
     private String email;
     private String password;
     private Roles roles;
     private Date date;
 
-    private static List<User> userDatabase = new ArrayList<>();
-
-    public User(String name, String username, String email, String password, Roles roles, Date date) {
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-        this.date = date;
-    }
-
     public User() {
 
     }
 
-    public boolean isEmailInUse(String emailToCheck) {
-        return this.email.equals(emailToCheck);
-    }
-
-    public boolean isUsernameInUse(String usernameToCheck) {
-        for(User user : userDatabase) {
-            if(user.getUsername() .equals(usernameToCheck)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void setName(String name) {
+   public void setName(String name) {
         this.name = name;
     }
 
@@ -98,26 +67,6 @@ public class User {
         this.date = date;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Roles getRoles() {
-        return roles;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -135,6 +84,7 @@ public class User {
     public int hashCode() {
         return Objects.hash(name, username, email, password, roles, date);
     }
+
 }
 
 
